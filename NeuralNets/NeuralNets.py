@@ -47,9 +47,8 @@ class NeuralNets(object):
 		# Split data in train/validation
 		x_train, x_dev, y_train, y_dev = train_test_split(x, y, test_size=0.1, stratify=y, random_state=123)
 
-		# Initailize and choose model
-		model = None
-		model = self.cnn(x, y)
+		# We choose our model
+		model = self.gru(x, y)
 
 		early_stopping = EarlyStoppingByPatience(x_dev, y_dev, self.patience, self.id_to_label, self.batch_size)
 		testing = TestCallback(x_test, y_test, self.id_to_label, self.batch_size)
