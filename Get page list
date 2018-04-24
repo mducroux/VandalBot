@@ -1,0 +1,9 @@
+def getPageList(logins):
+    liste_pages=[]
+    for user in logins:
+        result=requests.post(baseurl+'api.php?action=query&list=usercontribs&ucuser='+user+'&format=xml')
+        soup=BeautifulSoup(result.content,'lxml')
+        for primitive in soup.usercontribs.findAll('item'):
+            liste_pages.append(primitive['title'])
+    liste_pages=list(set(liste_pages))
+    return liste_pages
