@@ -37,7 +37,7 @@ class Dataset(object):
 		#Load data from the file path given by the "dataset" argument
 		self.x_train, self.y_train, self.x_test, self.y_test  = self.__load_data(train_set, test_set)
 
-	def __load_data(self, train_name, test_name, separator="\t"):
+	def __load_data(self, train_name, test_name, separator="\t"): # or separator = , ?
 		#Initialization of lists containing the text and the labels
 		x_train = []
 		y_train = []

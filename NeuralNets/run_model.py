@@ -29,8 +29,8 @@ patience = parameters["patience"]
 network = parameters["network_type"]
 
 # Path to train and test set
-train = '../data/dbpedia/lemmatize/train.txt'
-test = '../data/dbpedia/lemmatize/test.txt'
+train = 'home/mathieu/Documents/SHS/train.txt'
+test = 'home/mathieu/Documents/SHS/test.txt'
 
 directory = "output/"
 if not os.path.exists(directory):
