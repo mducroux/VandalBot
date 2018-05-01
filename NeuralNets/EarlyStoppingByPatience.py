@@ -155,4 +155,4 @@ class EarlyStoppingByPatience(Callback):
 			y_hat.append(np.argmax(prediction))
 
 		predictions = y_hat
-		acc(predictions) #Replace by: "fscore(predictions)" for Task C
+		f_score(predictions)#Replace by: "acc(predictions)" for precision

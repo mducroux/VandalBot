@@ -1,5 +1,1 @@
-- fasttext
-- word_embedding_path, matrix ?
-- to_categorical
-- besoin de validation set ? (et de TestCallback et EarlyStopping) ?
-
+- embedding_size ?
