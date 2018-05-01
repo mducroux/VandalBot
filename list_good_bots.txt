@@ -1,0 +1,21 @@
+Wikipast Bot 
+InferenceBot	
+SourceBot	
+TangoBot	
+LinkBot
+ImageBot	
+ChronoBot	
+SPARQLBot	
+FormatBot		
+OrthoBot		
+PageUpdaterBot	
+BioPathBot
+SummarizingBot		
+SimilarBot
+TranslatorBot
+VandalBot
+Triplificator
+Creatobot
+SliderBot
+GraderBot		
+EntryMakerBot
