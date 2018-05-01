@@ -1,15 +1,3 @@
-Wikipast Bot 
-InferenceBot	
-SourceBot	
-TangoBot	
-LinkBot
-ImageBot	
-ChronoBot	
-SPARQLBot	
-FormatBot		
-OrthoBot		
-PageUpdaterBot	
-BioPathBot
 SummarizingBot		
 SimilarBot
 TranslatorBot
