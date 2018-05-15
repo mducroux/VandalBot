@@ -73,7 +73,7 @@ while(len(botsPages) < len(humansPages)):
     if((tmp not in humansPages) and (tmp not in botsPages) and len(tmp) > 20):
         botsPages.append(tmp)
 
-ponctuation = ['!','?',',',"'","\"",'(',')', '[', ']', '{', '}', ';', ':', '<br/>']
+ponctuation = ['!','?',',',"'","\"",'(',')', '[', ']', '{', '}', ';', ':', '<br/>', '...', '. ']
 
 def getPageContent(result):
     soup = BeautifulSoup(result.text, "lxml")
@@ -84,22 +84,23 @@ def getPageContent(result):
     soup2 = str(soup2.text)
     final = soup2.replace("^^", "<br/>")
     for p in ponctuation:
-		final = final.replace(p, ' ' + p + ' ')
-	final = final.replace('\s+','\s')
+         final = final.replace(p, ' ' + p + ' ')
+    final = final.replace("\n", " ").replace("\t", " ")
+    final = final.replace('\s+','\s')
     return final
 
 humansTextPages = []
 for p in humansPages:
     result = requests.post(baseurl+'index.php/'+p)
-    humansTextPages.append(getPageContent(result).replace("\n", " ").replace("\t", " ") + "\t0")
+    humansTextPages.append(getPageContent(result) + "\t0")
 
 botsTextPages = []
 for p in botsPages:
     result = requests.post(baseurl+'index.php/'+p)
-    botsTextPages.append(getPageContent(result).replace("\n", " ").replace("\t", " ") + "\t1")
+    botsTextPages.append(getPageContent(result) + "\t1")
 
 textPagesPlusIndicator = list(set(humansTextPages).union(set(botsTextPages)))
 
-file = open('output.txt','w')
+file = open('output2.txt','w')
 for item in textPagesPlusIndicator:
     file.write("%s\n" % item)
