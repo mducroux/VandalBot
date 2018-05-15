@@ -29,18 +29,17 @@ patience = parameters["patience"]
 network = parameters["network_type"]
 
 # Path to train and test set
-train = 'home/mathieu/Documents/SHS/train.txt'
-test = 'home/mathieu/Documents/SHS/test.txt'
+dataset = "../input.txt"
 
 directory = "output/"
 if not os.path.exists(directory):
 	os.makedirs(directory)
 
 # Create the dataset and load the data
-dataset = Dataset(train, test, word_embeddings_path, max_num_words, max_seq_length, embedding_size)
+dataset = Dataset(dataset, word_embeddings_path, max_num_words, max_seq_length, embedding_size)
 
 # Prepare the data for the model
-x_train, y_train, x_test, y_test, embedding_matrix, vocab_size, labels_to_ids = dataset.prepare_data()
+x, y, embedding_matrix, vocab_size, labels_to_ids = dataset.prepare_data()
 
 
 # The vocab size may be different if the initial max_num_words is greater than the dataset vocabulary
@@ -50,10 +49,10 @@ max_num_words = vocab_size
 nn = NeuralNets(filters, kernel_sizes, num_of_units, dropout, patience, embedding_matrix, max_seq_length, max_num_words, word_embeddings_path, embedding_size, batch_size, epochs, labels_to_ids)
 
 # Train the network and return scores (F-score or accuracy)
-acc = nn.train_model(x_train, y_train, x_test, y_test)
+fscore= nn.train_model(x, y)
 
 # Write results to file
-write_output(directory, network, data_set, max_seq_length, max_num_words, acc, parameters)
+write_output(directory, network, data_set, max_seq_length, max_num_words, fscore, parameters)
 
 
 

@@ -13,7 +13,7 @@ from keras.optimizers import *
 from keras import backend as K
 from TestCallback import TestCallback
 from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
 
 import keras.backend as K
 import tensorflow as tf
@@ -42,27 +42,52 @@ class NeuralNets(object):
 		self.num_of_classes = len(labels_to_ids)
 		print(self.id_to_label)
 
-	def train_model(self, x, y, x_test, y_test):
+	def train_model(self, x, y):
 
-		# Split data in train/validation
-		x_train, x_dev, y_train, y_dev = train_test_split(x, y, test_size=0.1, stratify=y, random_state=123)
+		# Suffle data
+		x, y = shuffle(x, y)
 
-		# We choose our model
-		model = self.gru(x, y)
+		# Create K-fold
+		n_folds = 10
+		skf = StratifiedKFold(n_splits=n_folds, shuffle=True)
+		i = 0
 
-		early_stopping = EarlyStoppingByPatience(x_dev, y_dev, self.patience, self.id_to_label, self.batch_size)
-		testing = TestCallback(x_test, y_test, self.id_to_label, self.batch_size)
+		# Label for split
+		lab = np.asarray([np.argmax(x) for x in y])
 
-		model.fit(x_train, y_train, batch_size=self.batch_size, epochs=self.epochs, verbose=1, shuffle=True, callbacks=[testing, early_stopping], validation_data=(x_dev, y_dev))
+		fscore = []
+
+		for train, test in skf.split(x, lab):
+			i+=1
+			print("\nRunning Fold", str(i), "/", str(n_folds))
+
+			# Initialize and chosse model
+			model = None
+			model = self.gru()
+
+			x_train = np.asarray(x).take(train, axis=0)
+			y_train = np.asarray(y).take(train, axis=0)
+
+			x_test = np.asarray(x).take(test, axis=0)
+			y_test = np.asarray(y).take(test, axis=0)
+
+			early_stopping = EarlyStoppingByPatience(x_test, y_test, self.patience, self.id_to_label, self.batch_size)
+			testing = TestCallback(x_test, y_test, self.id_to_label, self.batch_size)
+
+			model.fit(x_train, y_train, batch_size=self.batch_size, epochs=self.epochs, verbose=1, shuffle=True, callbacks=[early_stopping], validation_data=(x_test, y_test))
+
+			fscore.append(early_stopping.max_fscore)
 
 		# If fscore change to: "fscore = early_stopping.max_fscore"
-		acc = early_stopping.max_acc
+		fscore = np.asarray(fscore).mean()
 
-		return acc
+		print("Average fscore", fscore)
+
+		return fscore
 
 
 	# CNN
-	def cnn(self, x, y):
+	def cnn(self):
 
 		main_input = Input(shape=(self.max_seq_length, ), dtype='int32', name='main_input')
 		embeddings = Embedding(self.max_num_words, self.embedding_size, input_length=self.max_seq_length, weights=[self.embedding_matrix], trainable=False)(main_input)
@@ -87,10 +112,10 @@ class NeuralNets(object):
 		return model
 
 	# GRU
-	def gru(self, x, y):
+	def gru(self):
 
 		main_input = Input(shape=(self.max_seq_length, ), dtype='int32', name='main_input')
-		embeddings = Embedding(self.max_num_words, self.embedding_size, input_length=self.max_seq_length, weights=[self.embedding_matrix], trainable=True)(main_input)
+		embeddings = Embedding(self.max_num_words, self.embedding_size, input_length=self.max_seq_length, weights=[self.embedding_matrix], trainable=False)(main_input)
 
 		if self.bidirectional:
 			print("Building B-GRU model...")
@@ -98,7 +123,7 @@ class NeuralNets(object):
 
 		else:
 			print("Building GRU model...")
-			gru_out = GRU(self.num_of_units, return_sequences=True, dropout=self.dropout, recurrent_dropout=self.dropout)(embeddings)
+			gru_out = GRU(self.num_of_units, return_sequences=False, dropout=self.dropout, recurrent_dropout=self.dropout)(embeddings)
 
 
 		predictions = Dense(self.num_of_classes, activation='softmax')(gru_out)

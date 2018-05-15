@@ -13,7 +13,7 @@ class EarlyStoppingByPatience(Callback):
 		self.batch_size = batch_size
 		self.patience = patience
 		
-		self.max_acc = 0
+		self.max_fscore = 0
 
 		self.max_epoch_id = 0
 		self.patience_counter = 0
@@ -56,77 +56,36 @@ class EarlyStoppingByPatience(Callback):
 			self.epoch_counter += 1
 
 		# Compute F-score for task C
-		def f_score(self,predictions):
+		def f_score(self, predictions):
 
-			tpp = 0
-			tpf = 0
-			tpv = 0
-
-			fnp = 0
-			fnf = 0
-			fnv = 0
-
-			fpp = 0
-			fpf = 0
-			fpv = 0
+			tp = 0
+			fn = 0
+			fp = 0
 
 			for i in range(len(predictions)):
 				pred_label = self.id_to_label[predictions[i]]
 				true_label = self.id_to_label[np.where(self.y_test[i] == 1)[0][0]]
 				
-				if true_label == "policy":
-					if pred_label == "policy":
-						tpp += 1
-					if pred_label == "fact":
-						fnp += 1
-						fpf += 1
-					if pred_label == "value":
-						fnp += 1
-						fpv += 1
-				if true_label == "fact":
-					if pred_label == "policy":
-						fnf += 1
-						fpp += 1
-					if pred_label == "fact":
-						tpf += 1
-					if pred_label == "value":
-						fnf += 1
-						fpv += 1
-				if true_label == "value":
-					if pred_label == "policy":
-						fnv += 1
-						fpp += 1
-					if pred_label == "fact":
-						fpf += 1
-						fnv += 1
-					if pred_label == "value":
-						tpv += 1
+				if true_label == 0:
+					if pred_label == 0:
+						tp += 1
+					if pred_label == 1:
+						fn += 1
 
-			if tpp != 0:
-				precisionp = float(tpp) / (tpp + fpp)
-				recallp = float(tpp) / (tpp + fnp)
-			else:
-				precisionp = 0
-				recallp = 0
-			if tpf != 0:
-				precisionf = float(tpf) / (tpf + fpf)
-				recallf = float(tpf) / (tpf + fnf)
-			else:
-				precisionf = 0
-				recallf = 0
-			if tpv != 0:
-				precisionv = float(tpv) / (tpv + fpv)
-				recallv = float(tpv) / (tpv + fnv)
-			else:
-				precisionv = 0
-				recallv = 0
+				elif true_label == 1:
+					if pred_label == 0:
+						fp += 1
 
-			precision = (precisionp + precisionf + precisionv)/3
-			recall = (recallp + recallf + recallv)/3
+			if tp != 0:
+				precision = float(tp) / (tp + fp)
+				recall = float(tp) / (tp + fn)
+			else:
+				precision = 0
+				recall = 0
 
 			current_fscore = float(2 * precision * recall) / (precision + recall)
 
-			print("\nValidation F-score: ", current_fscore, "\n")
+			print("\nTest F-score: ", current_fscore, "\n")
 
 			self.epochs.append({'fscore': float(current_fscore)})
 
@@ -155,4 +114,4 @@ class EarlyStoppingByPatience(Callback):
 			y_hat.append(np.argmax(prediction))
 
 		predictions = y_hat
-		f_score(predictions)#Replace by: "acc(predictions)" for precision
+		f_score(self, predictions)#Replace by: "acc(predictions)" for precision
