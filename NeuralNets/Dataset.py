@@ -74,7 +74,7 @@ class Dataset(object):
 		train_labels = []
 		for label in y_train:
 			if label not in self.labels_to_ids.keys():
-				self.labels_to_ids[label] = len(self.labels_to_ids)
+				self.labels_to_ids[label] = int(label)
 			label = self.labels_to_ids[label]
 			train_labels.append(label)
 
@@ -85,6 +85,9 @@ class Dataset(object):
 		# Fit tokenizer on text
 		tokenizer = Tokenizer(filters="", num_words=self.vocab_size, lower=True)
 		tokenizer.fit_on_texts(train_texts)
+
+		with open('tokenizer.pickle', 'wb') as handle:
+   			pickle.dump(tokenizer, handle)
 
 		word_to_id = tokenizer.word_index
 		id_to_word = {value: key for key, value in word_to_id.items()}

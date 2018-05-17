@@ -47,6 +47,15 @@ class NeuralNets(object):
 		# Suffle data
 		x, y = shuffle(x, y)
 
+		model = None
+		model = self.gru()
+
+		early_stopping = EarlyStoppingByPatience(x, y, self.patience, self.id_to_label, self.batch_size)
+		model.fit(x, y, batch_size=self.batch_size, epochs=self.epochs, verbose=1, shuffle=True, callbacks=[early_stopping], validation_data=(x, y))
+		return early_stopping.max_fscore
+
+		'''
+
 		# Create K-fold
 		n_folds = 10
 		skf = StratifiedKFold(n_splits=n_folds, shuffle=True)
@@ -84,7 +93,7 @@ class NeuralNets(object):
 		print("Average fscore", fscore)
 
 		return fscore
-
+	'''
 
 	# CNN
 	def cnn(self):

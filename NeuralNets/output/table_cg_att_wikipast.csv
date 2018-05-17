@@ -1,0 +1,8 @@
+network_type,max_seq_length,max_num_words,embedding_size,word_embeddings_path,batch_size,max_epochs,kernel_sizes,filters,num_of_units,dropout,data_set,patience,max_acc
+cg_att,256,26941,300,fasttext,128,20,"[2, 3]",32,128,0,wikipast,3,0.96040546672
+network_type,max_seq_length,max_num_words,embedding_size,word_embeddings_path,batch_size,max_epochs,kernel_sizes,filters,num_of_units,dropout,data_set,patience,max_acc
+cg_att,250,26941,300,fasttext,256,20,"[2, 3]",32,128,0,wikipast,3,0.9663865546218487
+network_type,max_seq_length,max_num_words,embedding_size,word_embeddings_path,batch_size,max_epochs,kernel_sizes,filters,num_of_units,dropout,data_set,patience,max_acc
+cg_att,250,26941,300,fasttext,256,20,"[2, 3]",32,128,0,wikipast,3,0.9684210526315788
+network_type,max_seq_length,max_num_words,embedding_size,word_embeddings_path,batch_size,max_epochs,kernel_sizes,filters,num_of_units,dropout,data_set,patience,max_acc
+cg_att,250,26941,300,fasttext,256,20,"[2, 3]",32,128,0,wikipast,3,0.9684210526315788

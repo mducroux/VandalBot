@@ -15,7 +15,7 @@ def write_output(directory, network, dataset, max_seq_length, max_num_words, acc
 
 # Parameters
 data_set = parameters["dataset"]
-max_seq_length = 256
+max_seq_length = 250
 max_num_words = 1000000 # We don't limit the number of tokens
 embedding_size = parameters["embedding_size"]
 word_embeddings_path = parameters["word_embeddings_path"]

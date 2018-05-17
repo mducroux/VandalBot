@@ -100,8 +100,8 @@ class EarlyStoppingByPatience(Callback):
 				self.patience_counter = 0
 
 				#write model file
-				#print("Saving model...")
-				#self.model.save("models/" + str(current_fscore) +'.h5')  # creates a HDF5 file 'my_model.h5'
+				print("Saving model...")
+				self.model.save("models/" + str(current_fscore) +'.h5')  # creates a HDF5 file 'my_model.h5'
 
 			self.epoch_counter += 1
 
