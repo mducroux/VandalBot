@@ -4,6 +4,15 @@ from bs4 import BeautifulSoup
 import re
 import csv
 
+from NeuralNets import predict
+
+user='VandalBot'
+passw='Goawaybadbot'
+baseurl='http://wikipast.epfl.ch/wikipast/'
+summary='Lutte activement contre les nombreux SPAMBot qui assiègent Wikipast.'
+
+ponctuation = ['!','?',',',"'","\"",'(',')', '[', ']', '{', '}', ';', ':', '<br/>', '...', '. ']
+
 def getPageContent(result):
     soup = BeautifulSoup(result.text, "lxml")
     tmp = soup.find(class_ = 'mw-content-ltr')
@@ -37,5 +46,14 @@ def addContent(page, newContent):
     edit_cookie=r2.cookies.copy()
     edit_cookie.update(r3.cookies)
 
-    payload={'action':'edit','assert':'user','format':'json','utf8':'','text':newContent,'summary':summary,'title':page,'token':edit_token}
+    payload={'action':'edit','assert':'user','format':'json','utf8':'','appendtext':newContent,'summary':summary,'title':page,'token':edit_token}
     r4=requests.post(baseurl+'api.php',data=payload,cookies=edit_cookie)
+
+    print(r4.text)
+
+page = requests.post(baseurl+'index.php/Special:Page_au_hasard')
+suspicious_pages = "Suspicious_pages"
+newContent = "\n\n" + page.url
+
+if predict.pred(getPageContent(page)) == 1 :
+    addContent(suspicious_pages, newContent)
