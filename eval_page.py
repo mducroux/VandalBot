@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import re
 import csv
 
-from NeuralNets import predict
+from evaluation.NeuralNets import predict
 
 user='VandalBot'
 passw='Goawaybadbot'
@@ -49,11 +49,17 @@ def addContent(page, newContent):
     payload={'action':'edit','assert':'user','format':'json','utf8':'','appendtext':newContent,'summary':summary,'title':page,'token':edit_token}
     r4=requests.post(baseurl+'api.php',data=payload,cookies=edit_cookie)
 
-    print(r4.text)
 
-page = requests.post(baseurl+'index.php/Special:Page_au_hasard')
-suspicious_pages = "Suspicious_pages"
-newContent = "\n\n" + page.url
-
-if predict.pred(getPageContent(page)) == 1 :
-    addContent(suspicious_pages, newContent)
+for i in range(0, 60):
+	page = requests.post(baseurl+'index.php/Special:Page_au_hasard')
+	suspicious_page = requests.post(baseurl+'index.php/Suspicious_pages')
+	soup = BeautifulSoup(suspicious_page.text, "lxml")
+	tmp = str(soup.find(class_ = 'mw-content-ltr'))
+	tmp = tmp.replace("<br/>", "^^")
+	text_suspage = BeautifulSoup(tmp, "lxml")
+	text_suspage = str(text_suspage.text)
+	if page.url not in text_suspage:
+		newContent = "\n\n" + page.url
+		print(page.url)
+		if predict.pred(getPageContent(page)) == 1 :
+		    addContent("Suspicious_pages", newContent)
