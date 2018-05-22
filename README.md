@@ -7,7 +7,7 @@ Dependencies:
 - [fasttext][3] 0.8.22
 - [panda][4]
 	
-Download French bin+text from [fasttext pretrained vector] [5]
+Download French bin+text from [fasttext pretrained vector][5]
 
 [1]: https://keras.io/
 [2]: https://www.tensorflow.org/
