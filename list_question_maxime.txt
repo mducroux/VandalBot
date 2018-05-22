@@ -1,2 +1,0 @@
-- embedding_size ? max_seq_length ?
-- wiki.en ou wiki.fr as fasttext
