@@ -7,7 +7,7 @@ Dependencies:
 - [fasttext 0.8.22][3]
 - [panda 0.22.0][4]
 	
-Download [French bin+text][6] from [fasttext pretrained vector][5] and place the wiki.fr.bin in the root of the repository
+Download [French bin+text][6] from [fasttext pretrained vector][5] and place the "wiki.fr.bin" file in the root of the repository
 
 [1]: https://keras.io/
 [2]: https://www.tensorflow.org/
